@@ -114,7 +114,8 @@ class MapViewController: UIViewController , MKMapViewDelegate {
     }
     
     func pinIt(){
-        //let controller = self.storyboard?.instantiateViewController(withIdentifier: <#T##String#>)
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "AddLocationViewController") as? AddLocationViewController
+        present(controller!, animated: true, completion: nil)
     }
     
     func logout() {
@@ -153,6 +154,23 @@ class MapViewController: UIViewController , MKMapViewDelegate {
         mapView.addAnnotations(annotations)
         UIApplication.shared.isNetworkActivityIndicatorVisible  = false
     }
+    
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuseId = "Mark"
+        var pinPoint = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        
+        if pinPoint == nil{
+            pinPoint = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinPoint?.canShowCallout = true
+            pinPoint?.pinTintColor = .red
+            pinPoint?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        }else{
+            pinPoint?.annotation = annotation
+        }
+        return pinPoint
+    }
+    
     /*
     // MARK: - Navigation
 
