@@ -171,14 +171,24 @@ class MapViewController: UIViewController , MKMapViewDelegate {
         return pinPoint
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if control == view.rightCalloutAccessoryView{
+            if let open = view.annotation?.subtitle{
+                if let url = URL(string: open!){
+                    if UIApplication.shared.canOpenURL(url){
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }else{
+                        self.displayAlert(error: "URL can't be opened.")
+                    }
+                }else{
+                    self.displayAlert(error: "URL can't be opened.")
+                }
+                var urlString = view.annotation?.subtitle!
+                var url = URL(string: urlString!)
+                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+            }
+        }
     }
-    */
+
 
 }
