@@ -97,7 +97,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let student = StudentShared.sharedInstance.students[(indexPath as NSIndexPath).row]
-        
+              tableView.deselectRow(at: indexPath, animated: true)
                 if let url = URL(string: student.mediaURL){
             if UIApplication.shared.canOpenURL(url){
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)

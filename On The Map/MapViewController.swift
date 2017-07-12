@@ -70,9 +70,10 @@ class MapViewController: UIViewController , MKMapViewDelegate {
                 let mapLat = StudentModel.latitude
                 let mapLong = StudentModel.longitude
                 
-                UIApplication.shared.isNetworkActivityIndicatorVisible =  false
+                
                 
                 performUIUpdatesOnMain {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible =  false
                     let coordinates = CLLocationCoordinate2D(latitude: mapLat, longitude: mapLong)
                     let corrdinateSpan = MKCoordinateSpanMake(10, 10)
                     let coordinateRegion = MKCoordinateRegionMake(coordinates, corrdinateSpan)

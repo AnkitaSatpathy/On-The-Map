@@ -29,32 +29,28 @@ class AddLinkViewController: UIViewController , MKMapViewDelegate , UITextFieldD
 
     func getLocation() {
         print("Getting location")
-        guard locationName != nil else{               //checks whether the location is entered or not
-            displayAlert(error: "Please enter a location")
-            return
-        }
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
-        //start geocoding the string mentioned for location
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(self.locationName) { (results, error) in
-            print("Geocoding address")
-            guard error == nil else{
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                self.displayAlert(error: "Sorry there was an error with your request")
-                return
-            }
-            
-            guard (results?.isEmpty) == false else{                 //find whether there is any data recieved
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                self.displayAlert(error: "Sorry we couldn't find the specified location")
-                return
-            }
-            
+//        //start geocoding the string mentioned for location
+//        let geocoder = CLGeocoder()
+//        geocoder.geocodeAddressString(self.locationName) { (results, error) in
+//            print("Geocoding address")
+//            guard error == nil else{
+//                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//                self.displayAlert(error: "Sorry there was an error with your request")
+//                return
+//            }
+//
+//            guard (results?.isEmpty) == false else{                 //find whether there is any data recieved
+//                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//                self.displayAlert(error: "Sorry we couldn't find the specified location")
+//                return
+//            }
+        
             performUIUpdatesOnMain {
                 UIApplication.shared.isNetworkActivityIndicatorVisible = true
-                self.pinPlace = results![0]
+                
                 
                 self.mapview.showAnnotations([MKPlacemark(placemark: self.pinPlace)] , animated: true)        //annotate the map according to the location specified
                 
@@ -66,7 +62,7 @@ class AddLinkViewController: UIViewController , MKMapViewDelegate , UITextFieldD
             
         }
 
-    }
+    
     
     func updateLocationWithLink(){
         print("Updating location with link")
@@ -91,6 +87,7 @@ class AddLinkViewController: UIViewController , MKMapViewDelegate , UITextFieldD
                     StudentModel.objectID = objectId
                     performUIUpdatesOnMain {
                         self.dismiss(animated: true, completion: nil)
+                        self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
                     }
                 }
                 else{
@@ -102,13 +99,14 @@ class AddLinkViewController: UIViewController , MKMapViewDelegate , UITextFieldD
         }
         else{
             ParseAPIClient.sharedInstance().taskForPutMethod(objectID: StudentModel.objectID, uniqueKey: StudentModel.userKey, firstName: StudentModel.firstName, lastName: StudentModel.lastName, mapString: locationName, mediaURL: linkTextfield.text!, latitude: (self.pinPlace.location?.coordinate.latitude)!, longitude: (self.pinPlace.location?.coordinate.longitude)!, completionHandlerForPost: { (success, error) in
-                print("In taskForPutMethod")
+                print("In taskForPutMeth od")
                 print(StudentModel.objectID)
                 if success! {
                     UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     self.enterData()
                     performUIUpdatesOnMain {
                         self.dismiss(animated: true, completion: nil)
+                        self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
                     }
                 }else{
                     UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -124,7 +122,7 @@ class AddLinkViewController: UIViewController , MKMapViewDelegate , UITextFieldD
         print("entering data")
         
         //save the data till the app runs
-        StudentModel.latitude = (self.pinPlace.location?.coordinate.latitude)!
+        StudentModel.latitude = (pinPlace.location?.coordinate.latitude)!
         StudentModel.longitude = (self.pinPlace.location?.coordinate.longitude)!
         
         StudentModel.mapString = self.locationName
